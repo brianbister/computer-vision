@@ -83,25 +83,44 @@ def replace_pixels(image_1, image_2, color):
     cv2.imwrite("output/ps0-3-a-1.png", mono_2)
 
 
-def arithmetic_and_geometric_ops(image):
+def arithmetic_and_geometric_ops(image, color):
     """Prints the min, max, mean, and standard deviation
     of the image.
 
     image: The location of the image.
     """
 
-    # Get an array of just the green pixels.
+    # Get an array of just the color specfied.
     img = cv2.imread(image)
-    green_pixels = img[:, :, GREEN]
+    mono_pixels = img[:, :, color]
 
-    minimum = np.amin(green_pixels)
-    maximum = np.amax(green_pixels)
-    mean = np.mean(green_pixels)
-    std_dev = np.std(green_pixels)
+    minimum = np.amin(mono_pixels)
+    maximum = np.amax(mono_pixels)
+    mean = np.mean(mono_pixels)
+    std_dev = np.std(mono_pixels)
     print("Min: {}\n"
           "Max: {}\n"
           "Mean: {}\n"
           "Standard Deviation: {}".format(minimum, maximum, mean, std_dev))
+
+    # Do some basic operations.
+    mono_img = _create_monochrome_image(img, color)
+    mono_img[:, :, color] = mono_img[:, :, color] - mean
+    mono_img[:, :, color] = mono_img[:, :, color] / std_dev
+    mono_img[:, :, color] = mono_img[:, :, color] * 10
+    mono_img[:, :, color] = mono_img[:, :, color] + mean
+    cv2.imwrite("output/ps0-4-b-1.png", mono_img)
+
+    # Shift by 2 pixels.
+    mono_img = _create_monochrome_image(img, color)
+    shifted_mono_img = mono_img[:, 2:, :]
+    cv2.imwrite("output/ps0-4-c-1.png", shifted_mono_img)
+
+    # Subtract shifted image from original
+    diff_img = mono_img[:, :-2, :] - shifted_mono_img
+    diff_img = diff_img.clip(min=0)
+    cv2.imwrite("output/ps0-4-d-1.png", diff_img[:, :, color])
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run some basic computer "
@@ -124,4 +143,4 @@ if __name__ == "__main__":
     if args.question_num == 4:
         if len(args.images) != 1:
             raise ValueError("Requires only one image.")
-        arithmetic_and_geometric_ops(args.images[0])
+        arithmetic_and_geometric_ops(args.images[0], GREEN)
