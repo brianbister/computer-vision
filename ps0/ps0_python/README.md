@@ -11,3 +11,7 @@ I ran this numbers for house.tiff. It had a min of 0, max of 242, mean of ~168, 
 `What do negative pixel values mean anyways?`
 
 Negative pixel values are ignored and considered 0.
+
+`Add noise to the green channel and blue channel. Which looks better? Why?`
+
+For the image I chose the adding noise to the blue channel looks better. I think it's because the noise isn't as harsh on the image.

@@ -122,6 +122,24 @@ def arithmetic_and_geometric_ops(image, color):
     cv2.imwrite("output/ps0-4-d-1.png", diff_img[:, :, color])
 
 
+def add_noise(image):
+    """Add noise to an image.
+
+    image: The location of the image.
+    """
+    img = cv2.imread(image)
+    height, width, _ = img.shape
+    sigma = 8
+
+    noise = np.random.randn(height, width) * sigma
+    img[:, :, GREEN] = img[:, :, GREEN] + noise
+    cv2.imwrite("output/ps0-5-a-1.png", img)
+
+    img = cv2.imread(image)
+    img[:, :, BLUE] = img[:, :, BLUE] + noise
+    cv2.imwrite("output/ps0-5-b-1.png", img)
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run some basic computer "
                                                  "vision operations.")
@@ -144,3 +162,7 @@ if __name__ == "__main__":
         if len(args.images) != 1:
             raise ValueError("Requires only one image.")
         arithmetic_and_geometric_ops(args.images[0], GREEN)
+    if args.question_num == 5:
+        if len(args.images) != 1:
+            raise ValueError("Requires only one image.")
+        add_noise(args.images[0])
