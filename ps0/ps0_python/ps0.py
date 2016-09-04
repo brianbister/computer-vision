@@ -82,6 +82,27 @@ def replace_pixels(image_1, image_2, color):
            width_2 / 2 - 50:width_2 / 2 + 50] = center_1
     cv2.imwrite("output/ps0-3-a-1.png", mono_2)
 
+
+def arithmetic_and_geometric_ops(image):
+    """Prints the min, max, mean, and standard deviation
+    of the image.
+
+    image: The location of the image.
+    """
+
+    # Get an array of just the green pixels.
+    img = cv2.imread(image)
+    green_pixels = img[:, :, GREEN]
+
+    minimum = np.amin(green_pixels)
+    maximum = np.amax(green_pixels)
+    mean = np.mean(green_pixels)
+    std_dev = np.std(green_pixels)
+    print("Min: {}\n"
+          "Max: {}\n"
+          "Mean: {}\n"
+          "Standard Deviation: {}".format(minimum, maximum, mean, std_dev))
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run some basic computer "
                                                  "vision operations.")
@@ -100,3 +121,7 @@ if __name__ == "__main__":
         if len(args.images) != 2:
             raise ValueError("Requires two images.")
         replace_pixels(args.images[0], args.images[1], GREEN)
+    if args.question_num == 4:
+        if len(args.images) != 1:
+            raise ValueError("Requires only one image.")
+        arithmetic_and_geometric_ops(args.images[0])
